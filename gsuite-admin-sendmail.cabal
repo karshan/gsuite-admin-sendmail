@@ -1,0 +1,38 @@
+name:                gsuite-admin-sendmail
+version:             0.1.0.0
+synopsis:            send email from a google service account with domain wide delegation
+description:         send email via the gmail api with a gsuite service account that has domain wide delegation. https://developers.google.com/admin-sdk/directory/v1/guides/delegation
+homepage:            https://github.com/karshan/gsuite-admin-sendmail#readme
+author:              Karshan Sharma
+copyright:           2017 Karshan Sharma
+category:            Web
+build-type:          Simple
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      src
+  exposed-modules:     Google.SendMail
+  build-depends:       base >= 4.7 && < 5
+                     , base64-bytestring
+                     , gogol
+                     , gogol-gmail
+                     , http-client
+                     , http-client-tls
+                     , lens
+                     , mime-mail
+                     , protolude
+  default-language:    Haskell2010
+
+executable gsuitemail
+  hs-source-dirs:      app
+  main-is:             Main.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base
+                     , gsuite-admin-sendmail
+                     , optparse-applicative
+                     , protolude
+  default-language:    Haskell2010
+
+source-repository head
+  type:     git
+  location: https://github.com/karshan/gsuite-admin-sendmail
