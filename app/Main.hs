@@ -4,7 +4,6 @@
 module Main where
 
 import           Control.Monad (void)
-import           Data.Semigroup ((<>))
 import           Google.SendMail (sendMail')
 import           Options.Applicative (Parser, strOption, long, metavar, help, helper, fullDesc, execParser, info)
 import           Protolude
