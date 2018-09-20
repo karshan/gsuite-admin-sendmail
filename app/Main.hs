@@ -3,9 +3,11 @@
 {-# LANGUAGE RecordWildCards   #-}
 module Main where
 
-import           Control.Monad (void)
-import           Google.SendMail (sendMail')
-import           Options.Applicative (Parser, strOption, long, metavar, help, helper, fullDesc, execParser, info)
+import           Control.Monad       (void)
+import           Google.SendMail     (sendMail')
+import           Options.Applicative (Parser, execParser, fullDesc, help,
+                                      helper, info, long, metavar, strOption)
+import           Prelude             (String)
 import           Protolude
 
 data Options = Options {
@@ -32,5 +34,6 @@ optionsParser = Options
 main :: IO ()
 main = void (go =<< execParser opts)
     where
-        go Options{..} = sendMail' credsFile svcAccUser toEmail subject message
+        go :: Options -> IO ()
+        go Options{..} = either (putStrLn . (displayException :: SomeException -> String)) (const $ return ()) =<< sendMail' credsFile svcAccUser toEmail subject message
         opts = info (optionsParser <**> helper) fullDesc

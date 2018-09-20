@@ -15,12 +15,12 @@ import           Network.Mail.Mime (Address(..), Mail, renderMail', simpleMail')
 import qualified Data.ByteString.Base64.URL as B64Url
 import           Protolude
 
-sendMail' :: (StringConv a Text, StringConv b LText) => FilePath -> a -> a -> a -> b -> IO Google.Message
+sendMail' :: (Exception e, StringConv a Text, StringConv b LText) => FilePath -> a -> a -> a -> b -> IO (Either e Google.Message)
 sendMail' svcAccKey svcAccUser to subject msg =
     sendMail svcAccKey svcAccUser $ simpleMail' (Address Nothing (toS to)) (Address Nothing (toS svcAccUser)) (toS subject) (toS msg)
 
-sendMail :: (StringConv a Text) => FilePath -> a -> Mail -> IO Google.Message
-sendMail svcAccKey svcAccUser mail = do
+sendMail :: (StringConv a Text, Exception e) => FilePath -> a -> Mail -> IO (Either e Google.Message)
+sendMail svcAccKey svcAccUser mail = try $ do
     rawMail <- B64Url.encode . toS <$> renderMail' mail
     mgr <- newManager tlsManagerSettings
     creds <- Google.serviceAccountUser (Just $ toS svcAccUser) <$> Google.fromFilePath svcAccKey
